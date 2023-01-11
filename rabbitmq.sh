@@ -1,5 +1,6 @@
 #!/bin/bash
-sudo yum install epel-release -y
+sudo -i
+# sudo yum install epel-release -y
 sudo yum update -y
 sudo yum install wget -y
 cd /tmp/

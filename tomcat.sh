@@ -1,12 +1,20 @@
+#!/bin/bash
+sudo -i
+sudo yum update -y
+
 TOMURL="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/bin/apache-tomcat-8.5.37.tar.gz"
-yum install java-1.8.0-openjdk -y
-yum install git maven wget -y
+sudo yum install java-1.8.0-openjdk -y
+sudo yum install git maven wget -y
 cd /tmp/
 wget $TOMURL -O tomcatbin.tar.gz
-EXTOUT=`tar xzvf tomcatbin.tar.gz`
-TOMDIR=`echo $EXTOUT | cut -d '/' -f1`
-useradd --shell /sbin/nologin tomcat
-rsync -avzh /tmp/$TOMDIR/ /usr/local/tomcat8/
+tar xzvf tomcatbin.tar.gz
+useradd --home-dir /usr/local/tomcat8 --shell /sbin/nologin tomcat
+cp -r /tmp/apache-tomcat-8.5.37/* /usr/local/tomcat8/
+
+# EXTOUT=`tar xzvf tomcatbin.tar.gz`
+# TOMDIR=`echo $EXTOUT | cut -d '/' -f1`
+# useradd --shell /sbin/nologin tomcat
+# rsync -avzh /tmp/$TOMDIR/ /usr/local/tomcat8/
 chown -R tomcat.tomcat /usr/local/tomcat8
 
 rm -rf /etc/systemd/system/tomcat.service
@@ -17,25 +25,15 @@ Description=Tomcat
 After=network.target
 
 [Service]
-
 User=tomcat
-Group=tomcat
-
 WorkingDirectory=/usr/local/tomcat8
-
-#Environment=JRE_HOME=/usr/lib/jvm/jre
+Environment=JRE_HOME=/usr/lib/jvm/jre
 Environment=JAVA_HOME=/usr/lib/jvm/jre
-
-Environment=CATALINA_PID=/var/tomcat/%i/run/tomcat.pid
 Environment=CATALINA_HOME=/usr/local/tomcat8
 Environment=CATALINE_BASE=/usr/local/tomcat8
-
 ExecStart=/usr/local/tomcat8/bin/catalina.sh run
 ExecStop=/usr/local/tomcat8/bin/shutdown.sh
-
-
-RestartSec=10
-Restart=always
+SyslogIdentifier=tomcat-%i
 
 [Install]
 WantedBy=multi-user.target
