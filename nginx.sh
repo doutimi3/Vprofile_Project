@@ -1,3 +1,6 @@
+#!/bin/bash
+sudo -i
+
 # adding repository and installing nginx		
 apt update
 apt install nginx -y

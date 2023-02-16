@@ -48,11 +48,14 @@ git clone -b local-setup https://github.com/devopshydclub/vprofile-project.git
 cd vprofile-project
 mvn install
 systemctl stop tomcat
-sleep 60
+sleep 120
 rm -rf /usr/local/tomcat8/webapps/ROOT*
 cp target/vprofile-v2.war /usr/local/tomcat8/webapps/ROOT.war
 systemctl start tomcat
-sleep 120
-cp /vagrant/application.properties /usr/local/tomcat8/webapps/ROOT/WEB-INF/classes/application.properties
+sleep 240
+cd /tmp/
+git clone https://github.com/doutimi3/Vprofile_Project.git
+chown tomcat.tomcat /usr/local/tomcat8/webapps -R
+\cp /tmp/Vprofile_Project/application.properties /usr/local/tomcat8/webapps/ROOT/WEB-INF/classes/application.properties
 systemctl restart tomcat
 
